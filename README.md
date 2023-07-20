@@ -2,7 +2,7 @@
 
 Reworks and rebalances to [Spikestrip 2.0](https://thunderstore.io/package/SpikestripModding/Spikestrip2_0/) elites that makes them closer in power to vanilla elites.
 
-Also try: [Nemesis Rising Tides](https://thunderstore.io/package/prodzpod/Nemesis_RisingTides/)
+Also try: [Nemesis Rising Tides](https://thunderstore.io/package/prodzpod/Nemesis_Rising_Tides/)
 
 ## T1: Plated Elites <img src="https://cdn.discordapp.com/attachments/515678914316861451/1131485914137382953/texBuffAffixPlated.png" width="24">
 ![Elite](https://cdn.discordapp.com/attachments/515678914316861451/1131484732497088543/20230720155028_1.png)
@@ -17,7 +17,7 @@ You might want to **disable / "zero out" ZetAspects settings** if this setting i
 - Debuff duration configurable
 - Ability to "break out" faster by not moving (up to 6x, configurable)  
 
-Note: Might still be too close to [Aquamarine](https://thunderstore.io/package/prodzpod/Nemesis_RisingTides/) elites? let me know if you have a better rework idea (3). I think theyre distinct enough though considering veiled / celestine. different tiers too
+Note: Might still be too close to [Aquamarine](https://thunderstore.io/package/prodzpod/Nemesis_Rising_Tides/) elites? let me know if you have a better rework idea (3). I think theyre distinct enough though considering veiled / celestine. different tiers too
 
 ## T1: Veiled Elites <img src="https://cdn.discordapp.com/attachments/515678914316861451/1131485914363859004/texCloakedAffixBuff.png" width="24">
 ![Elite](https://cdn.discordapp.com/attachments/515678914316861451/1131484733382074458/20230720154346_1.png)
@@ -35,5 +35,5 @@ Note: Might still be too close to [Aquamarine](https://thunderstore.io/package/p
 - Miscellaneous name changes.
 
 ## Changelog
+- 1.0.2: s <img src="https://cdn.discordapp.com/attachments/781570609729372253/1112438647036334100/SE.jpg" width="24">
 - 1.0.1: Assassins actually cannot be veiled, bugfixes, Read Me (RM reference) update
-- Somewhere Else <img src="https://cdn.discordapp.com/attachments/781570609729372253/1112438647036334100/SE.jpg" width="24">
