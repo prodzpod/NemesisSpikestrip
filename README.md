@@ -35,5 +35,6 @@ Note: Might still be too close to [Aquamarine](https://thunderstore.io/package/p
 - Miscellaneous name changes.
 
 ## Changelog
+- 1.0.3: Automatically disables each module if corresponding config is disabled on the main mod.
 - 1.0.2: s <img src="https://cdn.discordapp.com/attachments/781570609729372253/1112438647036334100/SE.jpg" width="24">
 - 1.0.1: Assassins actually cannot be veiled, bugfixes, Read Me (RM reference) update

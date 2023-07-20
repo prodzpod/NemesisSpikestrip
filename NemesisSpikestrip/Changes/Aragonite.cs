@@ -17,7 +17,7 @@ namespace NemesisSpikestrip.Changes
             enabled = Main.Config.Bind(nameof(Aragonite), "Enabled", true, "").Value;
             IgnoreDrone = Main.Config.Bind(nameof(Aragonite), "Ignore Followers", true, "Hitting followers such as drones does not trigger the special attack");
             LanguageAPI.AddOverlay($"EQUIPMENT_AFFIX{nameof(Aragonite).ToUpper()}_DESCRIPTION", "On hit, unleash a <style=cIsDamage>deadly wave</style> that deals <style=cIsDamage>500%</style> base damage."); // default
-            if (!enabled) return;
+            if (!enabled || !Main.IsEnabled(RagingElite.instance)) return;
             LanguageAPI.AddOverlay("EQUIPMENT_AFFIXARAGONITE_NAME", "Anger from Below");
             Main.SuperOverrides.Add("AFFIX_ARAGONITE_NAME", "Anger from Below");
             if (IgnoreDrone.Value)

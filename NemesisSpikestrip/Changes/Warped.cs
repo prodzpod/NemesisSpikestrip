@@ -3,6 +3,7 @@ using GrooveSaladSpikestripContent.Content;
 using HarmonyLib;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using PlasmaCoreSpikestripContent.Content.Elites;
 using R2API;
 using RoR2;
 using UnityEngine;
@@ -22,7 +23,7 @@ namespace NemesisSpikestrip.Changes
             LanguageAPI.AddOverlay($"EQUIPMENT_AFFIX{nameof(Warped).ToUpper()}_DESCRIPTION", enabled
                 ? $"Attacks <style=cIsUtility>levitate</style> on hit for <style=cIsUtility>{Duration.Value / BreakoutCoefficient.Value}s</style> or more." // changed
                 : $"Attacks <style=cIsUtility>levitate</style> on hit for <style=cIsUtility>4s</style>."); // default
-            if (!enabled) return;
+            if (!enabled || !Main.IsEnabled(WarpedElite.instance)) return;
             if (Duration.Value != 4f) Main.Harmony.PatchAll(typeof(PatchDuration));
             if (BreakoutCoefficient.Value > 0) Main.Harmony.PatchAll(typeof(PatchBreakout));
         }

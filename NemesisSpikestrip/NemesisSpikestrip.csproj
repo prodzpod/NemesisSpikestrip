@@ -27,6 +27,9 @@
 		<Reference Include="GrooveSaladSpikestripContent">
 		  <HintPath>..\..\libs\GrooveSaladSpikestripContent-nstrip.dll</HintPath>
 		</Reference>
+		<Reference Include="GrooveUnsharedUtils">
+		  <HintPath>..\..\libs\GrooveUnsharedUtils-nstrip.dll</HintPath>
+		</Reference>
 		<Reference Include="HGCSharpUtils">
 		  <HintPath>..\..\libs\HGCSharpUtils-nstrip.dll</HintPath>
 		</Reference>

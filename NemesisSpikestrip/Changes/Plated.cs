@@ -2,6 +2,7 @@
 using GrooveSaladSpikestripContent;
 using GrooveSaladSpikestripContent.Content;
 using HarmonyLib;
+using PlasmaCoreSpikestripContent.Content.Elites;
 using R2API;
 using RoR2;
 using UnityEngine;
@@ -32,7 +33,7 @@ namespace NemesisSpikestrip.Changes
             LanguageAPI.AddOverlay($"EQUIPMENT_AFFIX{nameof(Plated).ToUpper()}_DESCRIPTION", enabled
                 ? $"All but every {Hits.Value} hit is mitigated. Attacks <style=cIsUtility>stifle</style> on hit for <style=cIsUtility>8s</style>, reducing damage dealt by <style=cIsUtility>100%</style> base damage per stack." // changed
                 : $"Gain defensive plating that mitigates heavy damage. Attacks <style=cIsUtility>stifle</style> on hit for <style=cIsUtility>8s</style>, reducing damage dealt by <style=cIsUtility>100%</style> base damage per stack." ); // default
-            if (!enabled) return;
+            if (!enabled || !Main.IsEnabled(PlatedElite.instance)) return;
             if (Hits.Value > 0)
             {
                 Main.SuperOverrides.Add("PASSIVE_DEFENSE_PLATING", $"All but every {Hits.Value} hit is mitigated.");

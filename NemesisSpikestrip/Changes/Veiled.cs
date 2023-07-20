@@ -32,7 +32,7 @@ namespace NemesisSpikestrip.Changes
             LanguageAPI.AddOverlay($"EQUIPMENT_AFFIX{nameof(Veiled).ToUpper()}_DESCRIPTION", enabled
                 ? $"You are <style=cIsUtility>cloaked</style>. Getting hit makes you decloak." // changed
                 : $"Attacks <style=cIsUtility>cloak</style> you on hit."); // default
-            if (!enabled) return;
+            if (!enabled || !Main.IsEnabled(CloakedElite.instance)) return;
 
             const SpawnCard.EliteRules NOVEILED = (SpawnCard.EliteRules)339001;
             DirectorAPI.MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) =>
