@@ -7,9 +7,11 @@ using R2API;
 using RoR2;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
+using static R2API.DirectorAPI.Helpers;
 
 namespace NemesisSpikestrip.Changes
 {
@@ -31,6 +33,45 @@ namespace NemesisSpikestrip.Changes
                 ? $"You are <style=cIsUtility>cloaked</style>. Getting hit makes you decloak." // changed
                 : $"Attacks <style=cIsUtility>cloak</style> you on hit."); // default
             if (!enabled) return;
+
+            const SpawnCard.EliteRules NOVEILED = (SpawnCard.EliteRules)339001;
+            DirectorAPI.MonsterActions += (dccsPool, mixEnemyArtifactMonsters, currentStage) =>
+            {
+                if (dccsPool) ForEachPoolEntryInDccsPool(dccsPool, (poolEntry) =>
+                {
+                    foreach (var category in poolEntry.dccs.categories)
+                        foreach (var card in category.cards)
+                            if (card.spawnCard.name.Contains("Assassin2"))
+                                ((CharacterSpawnCard)card.spawnCard).eliteRules = NOVEILED; // some random number
+                });
+            };
+            On.RoR2.CombatDirector.EliteTierDef.CanSelect += (orig, self, rules) =>
+            {
+                if (rules == NOVEILED) return orig(self, SpawnCard.EliteRules.Default);
+                return orig(self, rules);
+            };
+            On.RoR2.CombatDirector.CalcHighestEliteCostMultiplier += (orig, rules) =>
+            {
+                if (rules == NOVEILED) return orig(SpawnCard.EliteRules.Default);
+                return orig(rules);
+            };
+            On.RoR2.CombatDirector.ResetEliteType += (orig, self) =>
+            {
+                orig(self);
+                if (self.currentMonsterCard.spawnCard.eliteRules == NOVEILED)
+                    self.currentActiveEliteDef = self.rng.NextElementUniform(self.currentActiveEliteTier.eliteTypes.Where(x => x != null && x.IsAvailable() && !x.name.Contains("Cloaked")).ToList());
+            };
+            IL.RoR2.CombatDirector.PrepareNewMonsterWave += (il) =>
+            {
+                ILCursor c = new(il);
+                c.GotoNext(x => x.MatchStfld<CombatDirector>(nameof(CombatDirector.currentActiveEliteDef)));
+                c.Emit(OpCodes.Ldarg_0);
+                c.EmitDelegate<Func<EliteDef, CombatDirector, EliteDef>>((orig, self) =>
+                {
+                    if (self.currentMonsterCard.spawnCard.eliteRules == NOVEILED) return self.rng.NextElementUniform(self.currentActiveEliteTier.eliteTypes.Where(x => x != null && x.IsAvailable() && !x.name.Contains("Cloaked")).ToList());
+                    return orig;
+                });
+            };
 
             if (BetterVisibility.Value)
             {
@@ -54,6 +95,7 @@ namespace NemesisSpikestrip.Changes
                         victim.SetBuffCount(RoR2Content.Buffs.Cloak.buffIndex, 0);
                         victim.AddTimedBuff(Cooldown, VisibleTime.Value);
                     }
+                    orig(self, damageInfo, _victim);
                 };
                 On.RoR2.CharacterBody.RemoveBuff_BuffIndex += (orig, self, idx) =>
                 {
@@ -67,6 +109,7 @@ namespace NemesisSpikestrip.Changes
                             scale = self.bestFitRadius * 0.2f
                         }, transmit: true);
                     }
+                    orig(self, idx);
                 };
                 Main.Harmony.PatchAll(typeof(PatchCloak));
             }

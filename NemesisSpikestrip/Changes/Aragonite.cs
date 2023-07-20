@@ -4,6 +4,7 @@ using PlasmaCoreSpikestripContent.Content.Elites;
 using R2API;
 using RoR2;
 using UnityEngine;
+using static PlasmaCoreSpikestripContent.Content.Elites.RagingElite;
 
 namespace NemesisSpikestrip.Changes
 {
@@ -19,7 +20,11 @@ namespace NemesisSpikestrip.Changes
             if (!enabled) return;
             LanguageAPI.AddOverlay("EQUIPMENT_AFFIXARAGONITE_NAME", "Anger from Below");
             Main.SuperOverrides.Add("AFFIX_ARAGONITE_NAME", "Anger from Below");
-            if (IgnoreDrone.Value) Main.Harmony.PatchAll(typeof(PatchIgnoreDrone));
+            if (IgnoreDrone.Value)
+            {
+                Main.Harmony.PatchAll(typeof(PatchIgnoreDrone));
+                Main.Harmony.PatchAll(typeof(PatchIgnoreDrone2));
+            }
         }
 
         [HarmonyPatch(typeof(RagingElite), nameof(RagingElite.GlobalEventManager_OnHitEnemy))]
@@ -27,11 +32,21 @@ namespace NemesisSpikestrip.Changes
         {
             public static bool Prefix(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, GlobalEventManager self, DamageInfo damageInfo, GameObject victim)
             {
-                if (victim?.GetComponent<CharacterBody>()?.master?.minionOwnership ?? false)
+                if (victim?.GetComponent<CharacterBody>()?.master?.minionOwnership?.ownerMaster ?? false)
                 {
                     orig(self, damageInfo, victim);
                     return false;
                 }
+                return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(RageAffixBuffBehaviourServer), nameof(RageAffixBuffBehaviourServer.OnKilledServer))]
+        public class PatchIgnoreDrone2
+        {
+            public static bool Prefix(DamageReport damageReport)
+            {
+                if (damageReport.attackerMaster?.minionOwnership?.ownerMaster ?? false) return false;
                 return true;
             }
         }
