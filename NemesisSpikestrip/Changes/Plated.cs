@@ -57,15 +57,23 @@ namespace NemesisSpikestrip.Changes
                     {
                         if (victim.HasBuff(Stack))
                         {
-                            damageInfo.rejected = true;
+                            damageInfo.rejected = false;
                             EffectData effectData = new()
                             {
                                 origin = damageInfo.position,
                                 rotation = Util.QuaternionSafeLookRotation((damageInfo.force != Vector3.zero) ? damageInfo.force : Random.onUnitSphere)
                             };
-                            EffectManager.SpawnEffect(newPlatedBlockEffectPrefab, effectData, transmit: true);
+                            
                             victim.AddBuff(Stack);
-                            if (victim.GetBuffCount(Stack) >= Hits.Value) victim.SetBuffCount(Stack.buffIndex, 0);
+                            if (victim.GetBuffCount(Stack) >= Hits.Value)
+                            {
+
+                                damageInfo.rejected = true;
+                                EffectManager.SpawnEffect(newPlatedBlockEffectPrefab, effectData, transmit: true);
+                                victim.SetBuffCount(Stack.buffIndex, 0);
+                                
+                            }
+                                
                         }
                         else victim.AddBuff(Stack);
                     }
