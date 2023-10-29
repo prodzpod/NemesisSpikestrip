@@ -6,7 +6,7 @@ Also try: [Nemesis Rising Tides](https://thunderstore.io/package/prodzpod/Nemesi
 
 ## T1: Plated Elites <img src="https://cdn.discordapp.com/attachments/515678914316861451/1131485914137382953/texBuffAffixPlated.png" width="24">
 ![Elite](https://cdn.discordapp.com/attachments/515678914316861451/1131484732497088543/20230720155028_1.png)
-- Reworked: Upon damage, increases its stack. only the 6th attack deals damage and resets the stack.
+- Reworked: Hitting the elite adds 1 stack of the debuff. When the debuff reaches the 6th stack, the enemy will block the next attack.
 - On death, provides small amounts of armor to enemies around itself. (buff to compensate)
 - Stack is visible in health, hopefully makes the effect less frustrating to deal with.
 
