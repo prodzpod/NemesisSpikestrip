@@ -70,6 +70,9 @@ namespace NemesisSpikestrip.Changes
                         else victim.AddBuff(Stack);
                     }
                     orig(self, damageInfo);
+                    CharacterBody? body = damageInfo.attacker?.GetComponent<CharacterBody>();
+                    if (body?.HasBuff(damageReductionBuff) ?? false)
+                        body.SetBuffCount(damageReductionBuff.buffIndex, body.GetBuffCount(damageReductionBuff) - 1);
                 };
             }
             if (MaxHPPenalty.Value != 1) RecalculateStatsAPI.GetStatCoefficients += (self, args) => { if (self.HasBuff(PlatedElite.instance.AffixBuff)) args.healthMultAdd += MaxHPPenalty.Value - 1; };

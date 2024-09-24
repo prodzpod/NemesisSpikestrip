@@ -27,17 +27,12 @@ namespace NemesisSpikestrip.Changes
             }
         }
 
-        [HarmonyPatch(typeof(RagingElite), nameof(RagingElite.GlobalEventManager_OnHitEnemy))]
+        [HarmonyPatch(typeof(RageAffixBuffBehaviourServer), nameof(RageAffixBuffBehaviourServer.OnTakeDamageServer))]
         public class PatchIgnoreDrone
         {
-            public static bool Prefix(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, GlobalEventManager self, DamageInfo damageInfo, GameObject victim)
+            public static bool Prefix(DamageReport damageReport)
             {
-                if (victim?.GetComponent<CharacterBody>()?.master?.minionOwnership?.ownerMaster ?? false)
-                {
-                    orig(self, damageInfo, victim);
-                    return false;
-                }
-                return true;
+                return !(damageReport?.damageInfo?.attacker?.GetComponent<CharacterBody>()?.master?.minionOwnership?.ownerMaster ?? false);
             }
         }
 

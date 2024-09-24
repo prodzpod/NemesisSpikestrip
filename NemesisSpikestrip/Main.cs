@@ -19,7 +19,7 @@ namespace NemesisSpikestrip
         public const string PluginGUID = PluginAuthor + "." + PluginName;
         public const string PluginAuthor = "prodzpod";
         public const string PluginName = "NemesisSpikestrip";
-        public const string PluginVersion = "1.0.3";
+        public const string PluginVersion = "1.0.5";
         public static ManualLogSource Log;
         public static PluginInfo pluginInfo;
         public static Harmony Harmony;
