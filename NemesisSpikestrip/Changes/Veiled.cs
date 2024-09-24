@@ -83,6 +83,7 @@ namespace NemesisSpikestrip.Changes
             {
                 Cooldown = ScriptableObject.CreateInstance<BuffDef>();
                 Cooldown.isCooldown = true;
+                Cooldown.isDebuff = true;
                 Cooldown.iconSprite = Addressables.LoadAssetAsync<Sprite>("RoR2/Base/Common/texBuffCloakIcon.tif").WaitForCompletion();
                 Cooldown.buffColor = Color.gray;
                 ContentAddition.AddBuffDef(Cooldown);
@@ -94,6 +95,7 @@ namespace NemesisSpikestrip.Changes
                     {
                         victim.SetBuffCount(RoR2Content.Buffs.Cloak.buffIndex, 0);
                         victim.AddTimedBuff(Cooldown, VisibleTime.Value);
+                        victim.outOfCombatStopwatch = 0;
                     }
                     orig(self, damageInfo, _victim);
                 };
