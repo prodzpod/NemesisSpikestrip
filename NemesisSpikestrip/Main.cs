@@ -6,6 +6,7 @@ using BepInEx.Bootstrap;
 using NemesisSpikestrip.Changes;
 using System.Collections.Generic;
 using GrooveSaladSpikestripContent;
+using UnityEngine;
 
 namespace NemesisSpikestrip
 {
@@ -19,12 +20,18 @@ namespace NemesisSpikestrip
         public const string PluginGUID = PluginAuthor + "." + PluginName;
         public const string PluginAuthor = "prodzpod";
         public const string PluginName = "NemesisSpikestrip";
-        public const string PluginVersion = "1.0.5";
+        public const string PluginVersion = "1.1.0";
         public static ManualLogSource Log;
         public static PluginInfo pluginInfo;
         public static Harmony Harmony;
         public static ConfigFile Config;
-        public static Dictionary<string, string> SuperOverrides = new();
+        public static ConfigEntry<float> SigmaLaserLength;
+        public static ConfigEntry<float> SigmaLaserThickness;
+        public static ConfigEntry<float> SigmaLaserDamage;
+        public static ConfigEntry<float> LivelyPotTrailSize;
+        public static ConfigEntry<float> LivelyPotTrailLife;
+        public static ConfigEntry<float> LivelyPotTrailDamage;
+        public static Dictionary<string, string> SuperOverrides = [];
 
         public void Awake()
         {
@@ -32,6 +39,12 @@ namespace NemesisSpikestrip
             Log = Logger;
             Harmony = new Harmony(PluginGUID);
             Config = new ConfigFile(System.IO.Path.Combine(Paths.ConfigPath, PluginGUID + ".cfg"), true);
+            SigmaLaserLength = Config.Bind("Rebalance", "Sigma Construct Laser Length", 60f, "in meter");
+            SigmaLaserThickness = Config.Bind("Rebalance", "Sigma Construct Laser Thickness", 1f, "in meter");
+            SigmaLaserDamage = Config.Bind("Rebalance", "Sigma Construct Laser Damage", 1.2f, "1 = 100% coeff");
+            LivelyPotTrailSize = Config.Bind("Rebalance", "Lively Pot Trail Size", 3f, "in meter");
+            LivelyPotTrailLife = Config.Bind("Rebalance", "Lively Pot Trail Life", 3.5f, "in second");
+            LivelyPotTrailDamage = Config.Bind("Rebalance", "Lively Pot Trail Damage Per Second", 1.5f, "1 = 100% coeff");
 
             Plated.Init();
             Warped.Init();
@@ -42,6 +55,27 @@ namespace NemesisSpikestrip
             {
                 Log.LogDebug("ZetAspect compat loaded :3");
                 Harmony.PatchAll(typeof(PatchSuperOverrides));
+            }
+
+            PlasmaCoreSpikestripContent.Content.Monsters.States.SigmaBeam.maxRange = SigmaLaserLength.Value;
+            PlasmaCoreSpikestripContent.Content.Monsters.States.SigmaBeam.width = SigmaLaserThickness.Value;
+            PlasmaCoreSpikestripContent.Content.Monsters.States.SigmaBeam.damageCoefficient = SigmaLaserDamage.Value;
+            Harmony.PatchAll(typeof(PatchPotMobile));
+        }
+
+        [HarmonyPatch(typeof(GrooveSaladSpikestripContent.Content.PotMobile.InstantiatePotMobileDamageTrail), nameof(GrooveSaladSpikestripContent.Content.PotMobile.InstantiatePotMobileDamageTrail.Start))]
+        public class PatchPotMobile
+        {
+            public static void Postfix(GrooveSaladSpikestripContent.Content.PotMobile.InstantiatePotMobileDamageTrail __instance)
+            {
+                var trail = __instance.trailInstance;
+                trail.pointLifetime *= LivelyPotTrailLife.Value / 9f;
+                trail.radius *= LivelyPotTrailSize.Value / 2f;
+                trail.damagePerSecond *= LivelyPotTrailDamage.Value / 1.5f;
+                trail.segmentPrefab.GetComponent<ParticleSystemRenderer>().minParticleSize *= LivelyPotTrailSize.Value / 2f;
+                trail.segmentPrefab.GetComponent<ParticleSystemRenderer>().maxParticleSize *= LivelyPotTrailSize.Value / 2f;
+                var main = trail.segmentPrefab.GetComponent<ParticleSystem>().main;
+                main.simulationSpeed /= (LivelyPotTrailLife.Value + 0.5f) / 9f;
             }
         }
 

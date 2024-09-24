@@ -1,10 +1,10 @@
 {
 	"name": "Nemesis_Spikestrip",
-	"version_number": "1.0.5",
+	"version_number": "1.1.0",
 	"website_url": "https://github.com/prodzpod/NemesisSpikestrip",
 	"description": "Reworks Spikestrip elites to feel closer to vanilla elites. Highly configurable.",
 	"dependencies": [
 		"bbepis-BepInExPack-5.4.2103",
-		"prodzpod-ProdzpodSpikestripContent-1.0.0"
+		"prodzpod-ProdzpodSpikestripContent-1.0.1"
 	]
 }

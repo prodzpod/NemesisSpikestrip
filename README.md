@@ -33,8 +33,10 @@ Note: Might still be too close to [Aquamarine](https://thunderstore.io/package/p
 ## Other changes
 - compatibility with affix-in-logbook mods ([WolfoQoL](https://thunderstore.io/package/Wolfo/WolfoQualityOfLife/), [ZetAspects](https://thunderstore.io/package/William758/ZetAspects/)).
 - Miscellaneous name changes.
+- some configs for Sigma Construct and Lively Pot. by default, buffs sigma construct's beams and makes lively pot's creep larger but last much shorter.
 
 ## Changelog
+- 1.1.0: enemy config
 - 1.0.6: fixed veiled captain shock and readme
 - 1.0.5: works for sots
 - 1.0.4: fixed crash due to aragonite change of main mod
