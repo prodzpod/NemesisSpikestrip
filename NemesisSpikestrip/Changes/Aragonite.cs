@@ -32,7 +32,13 @@ namespace NemesisSpikestrip.Changes
         {
             public static bool Prefix(DamageReport damageReport)
             {
-                return !(damageReport?.damageInfo?.attacker?.GetComponent<CharacterBody>()?.master?.minionOwnership?.ownerMaster ?? false);
+                return damageReport != null
+                        && damageReport.damageInfo != null
+                        && (bool)damageReport.damageInfo.attacker 
+                        && (bool)damageReport.damageInfo.attacker.GetComponent<CharacterBody>() 
+                        && (bool)damageReport.damageInfo.attacker.GetComponent<CharacterBody>().master 
+                        && (bool)damageReport.damageInfo.attacker.GetComponent<CharacterBody>().master.minionOwnership 
+                        && (bool)damageReport.damageInfo.attacker.GetComponent<CharacterBody>().master.minionOwnership.ownerMaster;
             }
         }
 
@@ -41,8 +47,10 @@ namespace NemesisSpikestrip.Changes
         {
             public static bool Prefix(DamageReport damageReport)
             {
-                if (damageReport.attackerMaster?.minionOwnership?.ownerMaster ?? false) return false;
-                return true;
+                return damageReport != null
+                    && (bool)damageReport.attackerMaster
+                    && (bool)damageReport.attackerMaster.minionOwnership
+                    && (bool)damageReport.attackerMaster.minionOwnership.ownerMaster;
             }
         }
     }

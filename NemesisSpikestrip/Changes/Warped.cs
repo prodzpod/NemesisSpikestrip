@@ -45,9 +45,11 @@ namespace NemesisSpikestrip.Changes
         {
             public static void Postfix(WarpedElite.GravityBuffBehaviour __instance)
             {
-                __instance.body.healthComponent?.TakeDamageForce(Vector3.up * Time.fixedDeltaTime * -__instance.body.corePosition.y);
-                Vector3 velocity = __instance.body.characterMotor?.velocity ?? Vector3.zero;
-                CharacterBody.TimedBuff gravityTimer = __instance.body.timedBuffs.Find(x => x.buffIndex == WarpedElite.gravityBuff.buffIndex);
+                if (!(bool)__instance || !(bool)__instance.body) return;
+                if ((bool)__instance.body.healthComponent)
+                    __instance.body.healthComponent.TakeDamageForce(Vector3.up * Time.fixedDeltaTime * -__instance.body.corePosition.y);
+                Vector3 velocity = ((bool)__instance.body.characterMotor) ? __instance.body.characterMotor.velocity : Vector3.zero;
+                CharacterBody.TimedBuff gravityTimer = (__instance.body.timedBuffs != null) ? __instance.body.timedBuffs.Find(x => x.buffIndex == WarpedElite.gravityBuff.buffIndex) : null;
                 if (gravityTimer != null && gravityTimer.timer > 0)
                 {
                     gravityTimer.timer -= (Time.fixedDeltaTime * BreakoutCoefficient.Value / Mathf.Sqrt((velocity.x * velocity.x) + (velocity.z * velocity.z) + 1));

@@ -52,8 +52,9 @@ namespace NemesisSpikestrip.Changes
 
                 On.RoR2.HealthComponent.TakeDamage += (orig, self, damageInfo) =>
                 {
-                    CharacterBody victim = self?.body;
-                    if (!damageInfo.rejected && damageInfo.procCoefficient > 0f && victim != null && victim.HasBuff(PlatedElite.instance.AffixBuff))
+                    if (!(bool)self) { orig(self, damageInfo); return; }
+                    CharacterBody victim = self.body;
+                    if (!damageInfo.rejected && damageInfo.procCoefficient > 0f && (bool)victim && victim.HasBuff(PlatedElite.instance.AffixBuff))
                     {
                         if (victim.HasBuff(Stack))
                         {
@@ -70,9 +71,14 @@ namespace NemesisSpikestrip.Changes
                         else victim.AddBuff(Stack);
                     }
                     orig(self, damageInfo);
-                    CharacterBody? body = damageInfo.attacker?.GetComponent<CharacterBody>();
-                    if (body?.HasBuff(damageReductionBuff) ?? false)
+                    if (damageInfo != null
+                        && (bool)damageInfo.attacker
+                        && (bool)damageInfo.attacker.GetComponent<CharacterBody>()
+                        && damageInfo.attacker.GetComponent<CharacterBody>().HasBuff(damageReductionBuff))
+                    {
+                        var body = damageInfo.attacker.GetComponent<CharacterBody>();
                         body.SetBuffCount(damageReductionBuff.buffIndex, body.GetBuffCount(damageReductionBuff) - 1);
+                    }
                 };
             }
             if (MaxHPPenalty.Value != 1) RecalculateStatsAPI.GetStatCoefficients += (self, args) => { if (self.HasBuff(PlatedElite.instance.AffixBuff)) args.healthMultAdd += MaxHPPenalty.Value - 1; };
@@ -86,7 +92,9 @@ namespace NemesisSpikestrip.Changes
                 On.RoR2.GlobalEventManager.OnCharacterDeath += (orig, self, damageReport) =>
                 {
                     orig(self, damageReport);
-                    if (damageReport.victimBody?.HasBuff(PlatedElite.instance.AffixBuff) ?? false)
+                    if (damageReport != null
+                        && (bool)damageReport.victimBody
+                        && damageReport.victimBody.HasBuff(PlatedElite.instance.AffixBuff))
                     {
                         SphereSearch sphereSearch = new()
                         {
@@ -99,7 +107,12 @@ namespace NemesisSpikestrip.Changes
                         sphereSearch.FilterCandidatesByDistinctHurtBoxEntities();
                         TeamMask mask = default; mask.AddTeam(damageReport.victimBody.teamComponent.teamIndex);
                         sphereSearch.FilterCandidatesByHurtBoxTeam(mask);
-                        sphereSearch.GetHurtBoxes().Do(hurtBox => { if (hurtBox?.healthComponent?.body != damageReport.victimBody) hurtBox?.healthComponent?.body?.AddBuff(OnDeath); });
+                        sphereSearch.GetHurtBoxes().Do(hurtBox => { 
+                            if ((bool)hurtBox 
+                            && (bool)hurtBox.healthComponent 
+                            && (bool)hurtBox.healthComponent.body 
+                            && hurtBox.healthComponent.body != damageReport.victimBody) hurtBox.healthComponent.body.AddBuff(OnDeath); 
+                        });
                     }
                 };
                 RecalculateStatsAPI.GetStatCoefficients += (self, args) => { if (self.HasBuff(OnDeath)) args.armorAdd += OnDeathArmor.Value; };

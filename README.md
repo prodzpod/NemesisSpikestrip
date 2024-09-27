@@ -36,6 +36,7 @@ Note: Might still be too close to [Aquamarine](https://thunderstore.io/package/p
 - some configs for Sigma Construct and Lively Pot. by default, buffs sigma construct's beams and makes lively pot's creep larger but last much shorter.
 
 ## Changelog
+- 1.1.1: i dont know whats going on exactly but i removed all null checks. wont fix nre nonsense unless i get reproducible steps if it still persists
 - 1.1.0: enemy config
 - 1.0.6: fixed veiled captain shock and readme
 - 1.0.5: works for sots

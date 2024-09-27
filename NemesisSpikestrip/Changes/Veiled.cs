@@ -59,7 +59,7 @@ namespace NemesisSpikestrip.Changes
             {
                 orig(self);
                 if (self.currentMonsterCard.spawnCard.eliteRules == NOVEILED)
-                    self.currentActiveEliteDef = self.rng.NextElementUniform(self.currentActiveEliteTier.eliteTypes.Where(x => x != null && x.IsAvailable() && !x.name.Contains("Cloaked")).ToList());
+                    self.currentActiveEliteDef = self.rng.NextElementUniform(self.currentActiveEliteTier.eliteTypes.Where(x => (bool)x && x.IsAvailable() && !x.name.Contains("Cloaked")).ToList());
             };
             IL.RoR2.CombatDirector.PrepareNewMonsterWave += (il) =>
             {
@@ -68,7 +68,7 @@ namespace NemesisSpikestrip.Changes
                 c.Emit(OpCodes.Ldarg_0);
                 c.EmitDelegate<Func<EliteDef, CombatDirector, EliteDef>>((orig, self) =>
                 {
-                    if (self.currentMonsterCard.spawnCard.eliteRules == NOVEILED) return self.rng.NextElementUniform(self.currentActiveEliteTier.eliteTypes.Where(x => x != null && x.IsAvailable() && !x.name.Contains("Cloaked")).ToList());
+                    if (self.currentMonsterCard.spawnCard.eliteRules == NOVEILED) return self.rng.NextElementUniform(self.currentActiveEliteTier.eliteTypes.Where(x => (bool)x && x.IsAvailable() && !x.name.Contains("Cloaked")).ToList());
                     return orig;
                 });
             };
@@ -91,7 +91,7 @@ namespace NemesisSpikestrip.Changes
                 On.RoR2.GlobalEventManager.OnHitEnemy += (orig, self, damageInfo, _victim) =>
                 {
                     CharacterBody victim = _victim.GetComponent<CharacterBody>();
-                    if (victim != null && victim.HasBuff(CloakedElite.instance.AffixBuff) && victim.HasBuff(RoR2Content.Buffs.Cloak))
+                    if ((bool)victim && victim.HasBuff(CloakedElite.instance.AffixBuff) && victim.HasBuff(RoR2Content.Buffs.Cloak))
                     {
                         victim.SetBuffCount(RoR2Content.Buffs.Cloak.buffIndex, 0);
                         victim.AddTimedBuff(Cooldown, VisibleTime.Value);
